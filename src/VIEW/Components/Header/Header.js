@@ -1,28 +1,33 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {connect} from "react-redux";
 
-import {getContactsPerPage} from '../../../FLUX/contactsList/selectors'
-import {requestList, setContactsPerPage} from "../../../FLUX/contactsList/operations";
+import {getContactsPerPage, getSearchFilter} from '../../../FLUX/contactsList/selectors'
+import {requestList, setContactsPerPage, setSearchFilter} from "../../../FLUX/contactsList/operations";
 
 const mapStateToProps = (state) => ({
   contactsPerPage: getContactsPerPage(state)
+  , searchFilter: getSearchFilter(state)
 })
 
 const mapDispatchToProps = ({
   setContactsPerPage
   , requestList
+  , setSearchFilter
 })
 
 const HeaderLogic = (props) => {
+  const [searchValue, setSearchValue] = useState(props.searchFilter)
+
   const handleSettingsChange = (evt) => {
+    evt.preventDefault()
+
     let name = evt.target.name
     let value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value
 
-    // let changes = {[name]: value}
+    // console.log('Header.HandleSettingsChange:', 'name = ', name, 'value = ', value)
 
-    props.setContactsPerPage(+value)
+    props[name](value)
   }
-
 
   const handleRequestContacts = (evt) => {
     const listSize = +evt.target.dataset.listsize
@@ -66,17 +71,60 @@ const HeaderLogic = (props) => {
                    type="number"
                    min='5'
                    max='50'
-                   id="contactsPerPage"
-                   name='contactsPerPage'
+                   id="setContactsPerPage"
+                   name='setContactsPerPage'
                    pattern='\d*'
                    onChange={handleSettingsChange}
                    value={props.contactsPerPage}
             />
-            <label htmlFor="contactsPerPage" className='active'>Количество контактов на странице</label>
+            <label htmlFor="setContactsPerPage" className='active'>Количество контактов на странице</label>
           </div>
 
         </form>
       </div>
+
+      <form className="searchForm row valign-wrapper">
+
+        <div className="input-field col s12 m7">
+          <i className="material-icons prefix">search</i>
+          <input className=''
+                 type="text"
+                 id="searchFilter"
+                 name='searchFilter'
+                 onChange={(e) => {setSearchValue(e.target.value)}}
+                 value={searchValue}
+          />
+          <label htmlFor="searchFilter" className='active'>Поиск по списку</label>
+        </div>
+
+        <div className="row col s12 m5">
+
+          <button
+            className="btn col s6 m5"
+            name='setSearchFilter'
+            onClick={handleSettingsChange}
+            value={searchValue}
+          >
+            <i className="material-icons left">search</i>
+            Найти
+          </button>
+
+          <button
+            className="btn  col s6 m5 offset-m1"
+            name='setSearchFilter'
+            onClick={(e) => {
+              handleSettingsChange(e);
+              setSearchValue('')
+            }}
+            value=''
+          >
+            <i className="material-icons left red-text">clear</i>
+            Очистить поиск
+          </button>
+
+        </div>
+
+      </form>
 
     </header>
   )

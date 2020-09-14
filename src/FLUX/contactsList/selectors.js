@@ -105,4 +105,5 @@ const getContactsList = (state) => {
 export {
   getContactsList
   , getContactsPerPage
+  , getSearchFilter
 }
