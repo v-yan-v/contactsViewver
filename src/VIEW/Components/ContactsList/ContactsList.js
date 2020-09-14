@@ -1,7 +1,9 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {getContactsList, getSortBy, getSortForward} from "../../../FLUX/contactsList/selectors";
 import {setSortBy, toggleSortForward} from "../../../FLUX/contactsList/operations";
+import {ContactDetails} from "./ContactDetails";
+import {Preloader} from "../common/Preloader";
 
 const mapStateToProps = (state) => ({
   contactsList: getContactsList(state)
@@ -16,11 +18,20 @@ const mapDispatchToProps = {
 }
 
 const ContactsListLogic = (props) => {
+  /// VARIABLES ///
+  const [showContactDetails, setShowContactDetails] = useState(null)
+  useEffect(() => {
+    setShowContactDetails(null)
+  }, [props])
+
 
   /// HANDLERS ///
 
   const handleTableClick = (evt) => {
-    let tableRowClasses = Array.from(evt.target.closest('tr').classList)
+    setShowContactDetails(null)
+
+    let tr = evt.target.closest('tr')
+    let tableRowClasses = tr ? Array.from(tr.classList) : []
 
     // console.log('ContactsList.handleTableClick:', 'closest', tableRowClasses)
     // console.log('ContactsList.handleTableClick > appState.contactsList', props.state.contactsList )
@@ -38,8 +49,8 @@ const ContactsListLogic = (props) => {
     }
 
     // handle Table simple Row click
-    if ([].includes.call(tableRowClasses, 'tableRow')) {
-      // show contact details
+    if (tableRowClasses.includes('tableRow')) {
+      setShowContactDetails(parseInt(evt.target.closest('tr').dataset.index))
     }
   }
 
@@ -49,23 +60,7 @@ const ContactsListLogic = (props) => {
   const layout = () => {
     if (props.contactsList.length === 0) {
       // show preloader while waiting data
-      return (
-        <div className='section center-align'>
-          <div className="preloader-wrapper big active ">
-            <div className="spinner-layer spinner-blue-only">
-              <div className="circle-clipper left">
-                <div className="circle"></div>
-              </div>
-              <div className="gap-patch">
-                <div className="circle"></div>
-              </div>
-              <div className="circle-clipper right">
-                <div className="circle"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      return <Preloader size={'big'} color={'green'}/>
     }
     else if (props.contactsList.length === 1 && typeof props.contactsList[0] !== "object") {
       // the only element is not an Object? So here is a service message
@@ -83,12 +78,13 @@ const ContactsListLogic = (props) => {
       )
 
       return (
-        <table
-          className='highlight striped responsive-table'
-          onClick={handleTableClick}
-        >
+        <React.Fragment>
+          <table
+            className='highlight striped responsive-table'
+            onClick={handleTableClick}
+          >
 
-          <thead>
+            <thead>
             <tr className='tableHeadersRow'>
               {
                 ['id', 'firstName', 'lastName', 'email', 'phone']
@@ -101,11 +97,11 @@ const ContactsListLogic = (props) => {
                   })
               }
             </tr>
-          </thead>
+            </thead>
 
-          <tbody>
+            <tbody>
             {props.contactsList.map((c, i) => (
-              <tr className='tableRow' key={i} >
+              <tr className='tableRow' key={i} data-index={i}>
                 <td>{c.id}</td>
                 <td>{c.firstName}</td>
                 <td>{c.lastName}</td>
@@ -113,9 +109,12 @@ const ContactsListLogic = (props) => {
                 <td>{c.phone}</td>
               </tr>
             ))}
-          </tbody>
+            </tbody>
 
-        </table>
+          </table>
+
+          {showContactDetails !== null && <ContactDetails contact={props.contactsList[showContactDetails]}   /> }
+        </React.Fragment>
       )
     }
   }
