@@ -39,6 +39,6 @@ export const setSortBy = (propertyName) => (dispatch) => {
   dispatch(actions.sortBy(propertyName))
 }
 
-export const setSortForward = () => (dispatch) => {
-  dispatch(actions.sortForward())
+export const toggleSortForward = () => (dispatch) => {
+  dispatch(actions.toggleSortForward())
 }

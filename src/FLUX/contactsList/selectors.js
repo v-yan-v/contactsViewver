@@ -31,7 +31,7 @@ const applySearchFilter = (array, search) => {
   return array.filter(checkStringInObj)
 }
 
-const sortList = (array, sortProperty, forward = true) => {
+const sortList = (array, sortProperty, forward) => {
   let s
   if (forward) {
     s = (a,b) => (a[sortProperty] > b[sortProperty])
@@ -68,7 +68,7 @@ const getFilteredContacts = createSelector([getAllContacts, getSearchFilter], (c
 
 
 const getSortedContacts = createSelector([getFilteredContacts, getSortBy, getSortForward], (contacts, sortBy, sortForward) => {
-    return sortList(contacts, sortBy, sortForward)
+    return sortList(contacts, sortBy, sortForward).slice()
 })
 
 
@@ -106,4 +106,6 @@ export {
   getContactsList
   , getContactsPerPage
   , getSearchFilter
+  , getSortBy
+  , getSortForward
 }

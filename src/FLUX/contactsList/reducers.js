@@ -51,10 +51,10 @@ export const contactsList = (state = initialState, action) => {
       return {...state, showFrom: action.payload}
 
     case SORT_BY:
-      return {...state, sortBy: action.payload}
+      return {...state, sortBy: action.payload, sortForward: true}
 
     case SORT_FORWARD:
-      return {...state, sortForward: !state.contactsList.sortForward}
+      return {...state, sortForward: !state.sortForward}
 
     default:
       return state

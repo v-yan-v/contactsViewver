@@ -38,4 +38,4 @@ export const sortBy = (payload = 'id') => ({
   , payload
 })
 
-export const sortForward = () => ({type: types.SORT_FORWARD})
+export const toggleSortForward = () => ({type: types.SORT_FORWARD})
