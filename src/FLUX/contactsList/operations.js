@@ -18,13 +18,12 @@ export const requestList = (rows) => (dispatch) => {
   axios.get(`http://www.filltext.com/?rows=${rows}&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
     .then(response => {
       if (response.status === 200) {
-        return JSON.parse(response.data)
+        dispatch(actions.requestList(response.data))
+        dispatch(actions.fetchingSuccess())
       }
-      dispatch(actions.fetchingFailed())
-    })
-    .then(list => {
-      dispatch(actions.fetchingSuccess())
-      dispatch(actions.requestList(list))
+      else {
+        dispatch(actions.fetchingFailed())
+      }
     })
 }
 

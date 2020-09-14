@@ -1,9 +1,10 @@
+import * as serviceWorker from './serviceWorker';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import 'materialize-css/dist/css/materialize.min.css'
+
+import './index.sass';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 
 import store from "./FLUX/storage";
 import {Provider} from "react-redux";
