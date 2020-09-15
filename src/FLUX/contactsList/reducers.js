@@ -37,7 +37,7 @@ export const contactsList = (state = initialState, action) => {
       return {...state, fetchingSuccess: true, isFetching: false}
 
     case INSERT_BEGIN:
-      return {...state, list: [action.payload, ...state.contactsList.list]}
+      return {...state, list: [action.payload, ...state.list]}
 
     case REQUEST_LIST:
       return {...state, list: action.payload}
