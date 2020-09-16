@@ -29,6 +29,7 @@ export const requestList = (rows) => (dispatch) => {
 
 export const setSearchFilter = (searchString) => (dispatch) => {
   dispatch(actions.searchFilter(searchString))
+  dispatch(actions.showFrom(0))
 }
 
 export const setShowFrom = (num) => (dispatch) => {

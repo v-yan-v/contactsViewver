@@ -1,20 +1,31 @@
 import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
-import {getContactsList, getSortBy, getSortForward} from "../../../FLUX/contactsList/selectors";
-import {setSortBy, toggleSortForward} from "../../../FLUX/contactsList/operations";
+import {
+  getContactsList, getContactsListLength,
+  getContactsPerPage,
+  getShowFrom,
+  getSortBy,
+  getSortForward
+} from "../../../FLUX/contactsList/selectors";
+import {setShowFrom, setSortBy, toggleSortForward} from "../../../FLUX/contactsList/operations";
 import {ContactDetails} from "./ContactDetails";
 import {Preloader} from "../common/Preloader";
+import {Paginator} from "../common/Pagination/Paginator";
 
 const mapStateToProps = (state) => ({
-  contactsList: getContactsList(state)
-  , sortBy: getSortBy(state)
-  , sortForward: getSortForward(state)
+  contactsList     : getContactsList(state)
+  , sortBy         : getSortBy(state)
+  , sortForward    : getSortForward(state)
+  , itemToShow     : getShowFrom(state)
+  , contactsPerPage: getContactsPerPage(state)
+  , itemsTotal     : getContactsListLength(state)
   // , state
 })
 
 const mapDispatchToProps = {
   setSortBy
   , toggleSortForward
+  , setShowFrom
 }
 
 const ContactsListLogic = (props) => {
@@ -79,6 +90,16 @@ const ContactsListLogic = (props) => {
 
       return (
         <React.Fragment>
+
+          <Paginator
+            itemToShow={props.itemToShow}
+            pagesPerPortion={5}
+            getPage={props.setShowFrom}
+            itemsPerPage={props.contactsPerPage}
+            itemsTotal={props.itemsTotal}
+          />
+
+          { /* contacts list table */}
           <table
             className='highlight striped responsive-table'
             onClick={handleTableClick}

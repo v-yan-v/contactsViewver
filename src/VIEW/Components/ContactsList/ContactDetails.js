@@ -12,7 +12,7 @@ export const ContactDetails = ({contact = null}) => {
         <h4 className="header">{contact.firstName} {contact.lastName}</h4>
         <div className="card horizontal ">
           <div className="card-image col s4">
-            <img class="responsive-img" src={getUserPhoto() || noUserPhoto} />
+            <img className="responsive-img" src={getUserPhoto() || noUserPhoto} />
           </div>
           <div className="card-stacked">
             <div className="card-content">

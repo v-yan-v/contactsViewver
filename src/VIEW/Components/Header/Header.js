@@ -22,7 +22,8 @@ const HeaderLogic = (props) => {
     evt.preventDefault()
 
     let name = evt.target.name
-    let value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value
+    // let value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value
+    let value = evt.target.type === 'number' ? +evt.target.value : evt.target.value
 
     // console.log('Header.HandleSettingsChange:', 'name = ', name, 'value = ', value)
 

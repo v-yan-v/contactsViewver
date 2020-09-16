@@ -47,6 +47,7 @@ const sortList = (array, sortProperty, forward) => {
 /// SELECTORS ///
 
 const getAllContacts = (state) => state.contactsList.list
+const getContactsListLength = (state) => getFilteredContacts(state).length
 const getContactsPerPage = (state) => state.contactsList.contactsPerPage
 const getSearchFilter = (state) => state.contactsList.searchFilter
 const getShowFrom = (state) => state.contactsList.showFrom
@@ -108,4 +109,6 @@ export {
   , getSearchFilter
   , getSortBy
   , getSortForward
+  , getShowFrom
+  , getContactsListLength
 }
