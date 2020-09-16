@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
  * @param {number} props.itemsTotal - total amount of items in all pages
  * @param {number} props.itemsPerPage
  * @param {number} props.pagesPerPortion - amount of pageLinks available in Paginator at once
- * @param {number} props.itemToShow - item which start currentPage
+ * @param {number} props.startPage
  * @param {function} props.getPage - function to be called when user request other page
  * @returns {JSX.Element} - layout
  * @constructor
@@ -17,70 +17,61 @@ export const Paginator = (props) => {
 
   const pagesList = new Array(props.pagesPerPortion).fill(1) //if create empty elements JS do not map them
 
-  const [currentPage, setCurrentPage] = useState(Math.floor(props.itemToShow / props.itemsPerPage))
+  const [currentPage, setCurrentPage] = useState(props.startPage || 0)
   const [ portionToShow, setPortionToShow  ] = useState(Math.floor( currentPage / props.pagesPerPortion ))
-  // const [ inputPageNumber, setInputPageNumber ] = useState(1)
 
   //rerender when props.currentPage is changed
   useEffect(() => {
-    let pageFromProps = Math.floor(props.itemToShow / props.itemsPerPage)
-    let portionFromProps = Math.floor(pageFromProps / props.pagesPerPortion)
-
-    setCurrentPage(pageFromProps)
-    setPortionToShow(portionFromProps)
-  }, [props.itemToShow, props.itemsTotal])
-
-  //rerender when portionToShow is changed
-  // useEffect(() => {
-  //   setPortionToShow(() => {
-  //     return portionToShow
-  //   })
-  // }, [portionToShow])
+    setCurrentPage(0)
+    setPortionToShow(0)
+    goToPage(0)
+  }, [props.itemsTotal, props.itemsPerPage])
 
 
   ///     Local Functions     ///
-  const goToPage = (page = 0) => {
-    let index
+  const goToPage = (page = 0, step = 1) => {
 
-    const parsePageNumber = () => {
-      index = parseInt(page) * props.itemsPerPage
-      if (isNaN(index)) {
-        index = props.itemToShow
+    const parsePageNumber = (pn) => {
+      pn = parseInt(pn)
+      if (isNaN(pn)) {
+        pn = currentPage
       }
+      return pn
     }
 
     // calculate index next page start
     switch (page) {
       case 'next':
-        index = props.itemToShow + props.itemsPerPage
+        page = currentPage + step
         break
       case 'prev':
-        index = props.itemToShow - props.itemsPerPage
+        page = currentPage - step
         break
       case 'last':
-        index = props.itemsTotal - props.itemsPerPage
+        page = totalPages - step
         break
       case 'first':
-        index = 0
+        page = 0
         break
       default: // warn: !!!  page value is changed !!!
         // parse number or rollback if page either not correct string either number
-        parsePageNumber()
+        page = parsePageNumber(page)
 
     }
 
     // validate next page number
-      if (index >  props.itemsTotal - props.itemsPerPage) {
-        index = props.itemsTotal - props.itemsPerPage
+      if (page > totalPages - 1) {
+        page = totalPages -1
       }
-      else if (index < 0) {
-        index = 0
+      else if (page < 0) {
+        page = 0
       }
 
-    if (index !== props.itemToShow){
+    if (page !== currentPage){
       // request page only when it really need
-      // setCurrentPage(Math.ceil(index / props.itemsPerPage))
-      props.getPage(index)
+      props.getPage(page)
+      setCurrentPage(page)
+      setPortionToShow(Math.floor(page / props.pagesPerPortion))
     }
   }
 
@@ -90,18 +81,6 @@ export const Paginator = (props) => {
       goToPage( li.dataset.number )
     }
   }
-
-  // const inputPageNumberHandler = (evt) => {
-  //   let newPage = +evt.currentTarget.value
-  //   if (newPage < 1){
-  //     newPage = 1
-  //   }
-  //   if (newPage > totalPages) {
-  //     newPage = totalPages
-  //   }
-  //
-  //   setInputPageNumber(newPage)
-  // }
 
 
   ///     RETURN Layout to render     ///

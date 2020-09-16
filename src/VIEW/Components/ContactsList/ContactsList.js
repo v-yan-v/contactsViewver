@@ -92,9 +92,9 @@ const ContactsListLogic = (props) => {
         <React.Fragment>
 
           <Paginator
-            itemToShow={props.itemToShow}
+            startPage={0}
             pagesPerPortion={5}
-            getPage={props.setShowFrom}
+            getPage={(page) => (props.setShowFrom(page * props.contactsPerPage))}
             itemsPerPage={props.contactsPerPage}
             itemsTotal={props.itemsTotal}
           />
