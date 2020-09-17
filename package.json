@@ -2,6 +2,7 @@
   "name": "future-group.ru-20200910",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -27,7 +28,9 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
+      ">1%",
+      "last 5 versions",
+      "not ie 11",
       "not dead",
       "not op_mini all"
     ],
